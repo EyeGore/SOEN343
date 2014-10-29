@@ -1,3 +1,9 @@
+# Bin directory and project config files
+bin
+.settings
+.classpath
+.project
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
