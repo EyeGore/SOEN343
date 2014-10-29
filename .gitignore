@@ -1,6 +1,6 @@
 # Bin directory and project config files
-bin
-.settings
+bin/
+.settings/
 .classpath
 .project
 
