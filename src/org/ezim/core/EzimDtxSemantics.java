@@ -103,13 +103,13 @@ public class EzimDtxSemantics
 		throws Exception
 	{
 		EzimDtxSemantics.bHDRSPR
-			= EzimDtxSemantics.HDRSPR.getBytes(Ezim.dtxMsgEnc);
+			= EzimDtxSemantics.HDRSPR.getBytes(EzimNetwork.dtxMsgEnc);
 
 		EzimDtxSemantics.bCRLF
-			= EzimDtxSemantics.CRLF.getBytes(Ezim.dtxMsgEnc);
+			= EzimDtxSemantics.CRLF.getBytes(EzimNetwork.dtxMsgEnc);
 
 		EzimDtxSemantics.bHDRTRM
-			= EzimDtxSemantics.HDRTRM.getBytes(Ezim.dtxMsgEnc);
+			= EzimDtxSemantics.HDRTRM.getBytes(EzimNetwork.dtxMsgEnc);
 	}
 
 	/**
@@ -140,9 +140,9 @@ public class EzimDtxSemantics
 				strKey = (String) enumKeys.nextElement();
 				strVal = htIn.get(strKey);
 
-				osIn.write(strKey.getBytes(Ezim.dtxMsgEnc));
+				osIn.write(strKey.getBytes(EzimNetwork.dtxMsgEnc));
 				osIn.write(EzimDtxSemantics.bHDRSPR);
-				osIn.write(strVal.getBytes(Ezim.dtxMsgEnc));
+				osIn.write(strVal.getBytes(EzimNetwork.dtxMsgEnc));
 				osIn.write(EzimDtxSemantics.bCRLF);
 			}
 
@@ -167,7 +167,7 @@ public class EzimDtxSemantics
 		OutputStream osTmp = sckIn.getOutputStream();
 
 		// convert message body in bytes
-		bMsg = strMsg.getBytes(Ezim.dtxMsgEnc);
+		bMsg = strMsg.getBytes(EzimNetwork.dtxMsgEnc);
 
 		// create necessary header fields
 		Hashtable<String, String> htTmp
@@ -423,7 +423,7 @@ public class EzimDtxSemantics
 
 			EzimDtxSemantics.initByteArrays();
 
-			byte[] bTmp = new byte[Ezim.dtxBufLen];
+			byte[] bTmp = new byte[EzimNetwork.dtxBufLen];
 			int iTmp = 0;
 			long lCnt = 0;
 			long lCLen = 0;
@@ -531,7 +531,7 @@ public class EzimDtxSemantics
 			fisHdr.close();
 		}
 
-		strHdr = new String(bBuf, Ezim.dtxMsgEnc);
+		strHdr = new String(bBuf, EzimNetwork.dtxMsgEnc);
 		arrLines = strHdr.split(EzimDtxSemantics.CRLF);
 
 		for(int iX = 0; iX < arrLines.length; iX ++)
@@ -578,7 +578,7 @@ public class EzimDtxSemantics
 			}
 		}
 
-		strTmp = new String(bBuf, 0, iCnt, Ezim.dtxMsgEnc);
+		strTmp = new String(bBuf, 0, iCnt, EzimNetwork.dtxMsgEnc);
 
 		new EzimMsgIn(ecIn, strSbj, strTmp);
 	}
@@ -599,7 +599,7 @@ public class EzimDtxSemantics
 		throws Exception
 	{
 		FileOutputStream fosTmp = null;
-		byte[] bBuf = new byte[Ezim.dtxBufLen];
+		byte[] bBuf = new byte[EzimNetwork.dtxBufLen];
 		int iTmp = 0;
 		long lCnt = 0;
 
@@ -679,7 +679,7 @@ public class EzimDtxSemantics
 				// receive incoming message
 				if (strCType.equals(EzimDtxSemantics.CTYPE_MSG))
 				{
-					if (lCLen > (Ezim.maxMsgLength * 4))
+					if (lCLen > (EzimNetwork.maxMsgLength * 4))
 					{
 						throw new EzimException
 						(

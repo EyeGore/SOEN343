@@ -58,7 +58,7 @@ public class EzimAckTaker implements Runnable
 	private void loop()
 	{
 		Thread thTmp = Thread.currentThread();
-		byte[] arrBytes = new byte[Ezim.inBuf];
+		byte[] arrBytes = new byte[EzimNetwork.inBuf];
 		DatagramPacket dp = new DatagramPacket(arrBytes, arrBytes.length);
 
 		while(! thTmp.isInterrupted())
@@ -74,7 +74,7 @@ public class EzimAckTaker implements Runnable
 					dp.getData()
 					, 0
 					, dp.getLength()
-					, Ezim.dtxMsgEnc
+					, EzimNetwork.dtxMsgEnc
 				);
 
 				EzimThreadPool etpTmp = EzimThreadPool.getInstance();
@@ -130,10 +130,10 @@ public class EzimAckTaker implements Runnable
 
 			this.ms = new MulticastSocket(iPort);
 			this.ms.setReuseAddress(true);
-			this.ms.setInterface(Ezim.localAddress);
+			this.ms.setInterface(EzimNetwork.localAddress);
 
 			// Review:2012-11-10:this is NO effect on Linux
-			this.ms.joinGroup(this.isaMc, Ezim.localNI);
+			this.ms.joinGroup(this.isaMc, EzimNetwork.localNI);
 
 			this.loop();
 		}
@@ -153,7 +153,7 @@ public class EzimAckTaker implements Runnable
 					&& this.ms != null
 					&& ! this.ms.isClosed()
 				)
-					this.ms.leaveGroup(isaMc, Ezim.localNI);
+					this.ms.leaveGroup(isaMc, EzimNetwork.localNI);
 			}
 			catch(Exception e)
 			{
@@ -185,7 +185,7 @@ public class EzimAckTaker implements Runnable
 				&& this.ms != null
 				&& ! this.ms.isClosed()
 			)
-				this.ms.leaveGroup(isaMc, Ezim.localNI);
+				this.ms.leaveGroup(isaMc, EzimNetwork.localNI);
 		}
 		catch(Exception e)
 		{

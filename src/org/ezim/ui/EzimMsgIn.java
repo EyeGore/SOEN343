@@ -50,6 +50,7 @@ import org.ezim.core.EzimPlainDocument;
 import org.ezim.core.EzimSound;
 import org.ezim.ui.EzimMain;
 import org.ezim.ui.EzimMsgOut;
+import org.ezim.core.EzimNetwork;
 import org.ezim.ui.EzimTextArea;
 import org.ezim.ui.EzimTextField;
 
@@ -172,7 +173,7 @@ public class EzimMsgIn
 
 		this.etaMsg = new EzimTextArea
 		(
-			new EzimPlainDocument(Ezim.maxMsgLength)
+			new EzimPlainDocument(EzimNetwork.maxMsgLength)
 		);
 		this.etaMsg.setLineWrap(true);
 		this.etaMsg.setWrapStyleWord(true);

@@ -103,11 +103,11 @@ public class EzimMsgSender implements Runnable
 							(
 								new InetSocketAddress
 								(
-									Ezim.localAddress
+									EzimNetwork.localAddress
 									, 0
 								)
 							);
-							sckOut.connect(isaTmp, Ezim.dtxTimeout);
+							sckOut.connect(isaTmp, EzimNetwork.dtxTimeout);
 
 							EzimDtxSemantics.sendMsg(sckOut, sbj, msg);
 

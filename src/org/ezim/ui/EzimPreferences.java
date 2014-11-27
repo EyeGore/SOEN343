@@ -62,6 +62,7 @@ import org.ezim.ui.EzimLocalAddressListRenderer;
 import org.ezim.ui.EzimLocalNIListRenderer;
 import org.ezim.ui.EzimLocaleListRenderer;
 import org.ezim.ui.EzimMain;
+import org.ezim.core.EzimNetwork;
 
 public class EzimPreferences
 	extends JDialog
@@ -295,7 +296,7 @@ public class EzimPreferences
 		this.jlblDtxPort.setLabelFor(this.jspnDtxPort);
 		this.jcbLocalNI = new JComboBox<NetworkInterface>
 		(
-			new Vector<NetworkInterface>(Ezim.getLocalNIs())
+			new Vector<NetworkInterface>(EzimNetwork.getLocalNIs())
 		);
 		this.jcbLocalNI.setRenderer
 		(
@@ -1209,13 +1210,13 @@ public class EzimPreferences
 		if
 		(
 			(
-				strHostAddress.matches(Ezim.regexpIPv4)
-				&& ! strMcGroup.matches(Ezim.regexpIPv4)
+				strHostAddress.matches(EzimNetwork.regexpIPv4)
+				&& ! strMcGroup.matches(EzimNetwork.regexpIPv4)
 			)
 			// should we comment these out for dual stack networks?
 			|| (
-				strHostAddress.matches(Ezim.regexpIPv6)
-				&& ! strMcGroup.matches(Ezim.regexpIPv6)
+				strHostAddress.matches(EzimNetwork.regexpIPv6)
+				&& ! strMcGroup.matches(EzimNetwork.regexpIPv6)
 			)
 		)
 		{
@@ -1333,13 +1334,13 @@ public class EzimPreferences
 		String strHostAddress = ((InetAddress) this.jcbLocalAddress
 			.getSelectedItem()).getHostAddress();
 
-		if (strHostAddress.matches(Ezim.regexpIPv4))
+		if (strHostAddress.matches(EzimNetwork.regexpIPv4))
 		{
-			this.jtfdMcGroup.setText(Ezim.mcGroupIPv4);
+			this.jtfdMcGroup.setText(EzimNetwork.mcGroupIPv4);
 		}
-		else if (strHostAddress.matches(Ezim.regexpIPv6))
+		else if (strHostAddress.matches(EzimNetwork.regexpIPv6))
 		{
-			this.jtfdMcGroup.setText(Ezim.mcGroupIPv6);
+			this.jtfdMcGroup.setText(EzimNetwork.mcGroupIPv6);
 		}
 	}
 
@@ -1350,7 +1351,7 @@ public class EzimPreferences
 	{
 		this.jcbLocalAddress.removeAllItems();
 
-		List<InetAddress> lAddrs = Ezim.getNIAddresses
+		List<InetAddress> lAddrs = EzimNetwork.getNIAddresses
 		(
 			(NetworkInterface) this.jcbLocalNI.getSelectedItem()
 		);

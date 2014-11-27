@@ -65,6 +65,7 @@ import org.ezim.core.EzimContactTransferHandler;
 import org.ezim.core.EzimImage;
 import org.ezim.core.EzimLang;
 import org.ezim.core.EzimLogger;
+import org.ezim.core.EzimNetwork;
 import org.ezim.core.EzimPlainDocument;
 import org.ezim.core.EzimThreadPool;
 
@@ -218,7 +219,7 @@ public class EzimMain
 
 		this.etfStatus = new EzimTextField
 		(
-			new EzimPlainDocument(Ezim.maxAckLength)
+			new EzimPlainDocument(EzimNetwork.maxAckLength)
 			, EzimContact.STATUS_DEFAULT
 			, 1
 			, false
@@ -906,7 +907,7 @@ public class EzimMain
 				{
 					try
 					{
-						Thread.sleep(Ezim.rfhBtnTI);
+						Thread.sleep(EzimNetwork.rfhBtnTI);
 					}
 					catch(Exception e)
 					{
@@ -1114,9 +1115,9 @@ public class EzimMain
 
 		eclTmp.addContact
 		(
-			Ezim.localAddress
-			, Ezim.localDtxPort
-			, Ezim.localName
+			EzimNetwork.localAddress
+			, EzimNetwork.localDtxPort
+			, EzimNetwork.localName
 			, this.localSysState
 			, this.localState
 			, this.localStatus

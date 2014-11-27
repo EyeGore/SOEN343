@@ -70,7 +70,7 @@ public class EzimFileSender implements Runnable
 			(
 				new InetSocketAddress
 				(
-					Ezim.localAddress
+					EzimNetwork.localAddress
 					, 0
 				)
 			);
@@ -79,7 +79,7 @@ public class EzimFileSender implements Runnable
 				this.addr
 				, this.port
 			);
-			sckOut.connect(isaTmp, Ezim.dtxTimeout);
+			sckOut.connect(isaTmp, EzimNetwork.dtxTimeout);
 
 			EzimDtxSemantics.sendFile
 			(

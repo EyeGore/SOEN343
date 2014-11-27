@@ -177,8 +177,8 @@ public class EzimContactList implements ListModel
 	{
 		InetAddress iaOut = iaIn;
 
-		if (Ezim.isLocalAddress(iaIn))
-			iaOut = Ezim.localAddress;
+		if (EzimNetwork.isLocalAddress(iaIn))
+			iaOut = EzimNetwork.localAddress;
 
 		return iaOut;
 	}

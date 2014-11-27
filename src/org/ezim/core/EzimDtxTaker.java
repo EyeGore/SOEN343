@@ -63,7 +63,7 @@ public class EzimDtxTaker implements Runnable
 			try
 			{
 				sckTmp = this.ssck.accept();
-				sckTmp.setSoTimeout(Ezim.dtxTimeout);
+				sckTmp.setSoTimeout(EzimNetwork.dtxTimeout);
 
 				EzimContact ecTmp = EzimContactList.getInstance().getContact
 				(
@@ -122,8 +122,8 @@ public class EzimDtxTaker implements Runnable
 			(
 				new InetSocketAddress
 				(
-					Ezim.localAddress
-					, Ezim.localDtxPort
+					EzimNetwork.localAddress
+					, EzimNetwork.localDtxPort
 				)
 			);
 

@@ -47,6 +47,7 @@ import org.ezim.core.EzimContactTransferHandler;
 import org.ezim.core.EzimImage;
 import org.ezim.core.EzimLang;
 import org.ezim.core.EzimMsgSender;
+import org.ezim.core.EzimNetwork;
 import org.ezim.core.EzimPlainDocument;
 import org.ezim.core.EzimPlainDocument;
 import org.ezim.core.EzimThreadPool;
@@ -239,14 +240,14 @@ public class EzimMsgOut
 
 		this.etfSbj = new EzimTextField
 		(
-			new EzimPlainDocument(Ezim.dtxBufLen)
+			new EzimPlainDocument(EzimNetwork.dtxBufLen)
 			, ""
 			, 0
 		);
 
 		this.etaMsg = new EzimTextArea
 		(
-			new EzimPlainDocument(Ezim.maxMsgLength)
+			new EzimPlainDocument(EzimNetwork.maxMsgLength)
 		);
 		this.etaMsg.setLineWrap(true);
 		this.etaMsg.setWrapStyleWord(true);

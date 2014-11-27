@@ -76,7 +76,7 @@ public class EzimFileRequester implements Runnable
 			(
 				new InetSocketAddress
 				(
-					Ezim.localAddress
+					EzimNetwork.localAddress
 					, 0
 				)
 			);
@@ -85,7 +85,7 @@ public class EzimFileRequester implements Runnable
 				this.addr
 				, this.port
 			);
-			sckOut.connect(isaTmp, Ezim.dtxTimeout);
+			sckOut.connect(isaTmp, EzimNetwork.dtxTimeout);
 
 			EzimDtxSemantics.sendFileReq(sckOut, this.id, this.efo);
 		}

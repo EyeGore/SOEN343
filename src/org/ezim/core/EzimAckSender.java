@@ -61,9 +61,9 @@ public class EzimAckSender implements Runnable
 			if (null == EzimAckSender.ms)
 				throw new Exception("Ack socket not prepared yet.");
 
-			arrBytes = this.msg.getBytes(Ezim.dtxMsgEnc);
+			arrBytes = this.msg.getBytes(EzimNetwork.dtxMsgEnc);
 
-			if (arrBytes.length > Ezim.inBuf)
+			if (arrBytes.length > EzimNetwork.inBuf)
 				throw new Exception("Ack message too long.");
 
 			dp = new DatagramPacket
@@ -104,9 +104,9 @@ public class EzimAckSender implements Runnable
 				EzimAckSender.iMcPort = EzimConf.NET_MC_PORT;
 
 				EzimAckSender.ms = new MulticastSocket(iMcPort);
-				EzimAckSender.ms.setNetworkInterface(Ezim.localNI);
+				EzimAckSender.ms.setNetworkInterface(EzimNetwork.localNI);
 				EzimAckSender.ms.setReuseAddress(true);
-				EzimAckSender.ms.setTimeToLive(Ezim.ttl);
+				EzimAckSender.ms.setTimeToLive(EzimNetwork.ttl);
 
 				if (EzimAckSender.ms.getLoopbackMode())
 					EzimAckSender.ms.setLoopbackMode(false);

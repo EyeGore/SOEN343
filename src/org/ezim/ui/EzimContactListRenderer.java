@@ -30,6 +30,7 @@ import org.ezim.core.Ezim;
 import org.ezim.core.EzimConf;
 import org.ezim.core.EzimContact;
 import org.ezim.core.EzimImage;
+import org.ezim.core.EzimNetwork;
 
 public class EzimContactListRenderer
 	extends JLabel
@@ -81,7 +82,7 @@ public class EzimContactListRenderer
 		}
 		else
 		{
-			if (Ezim.isLocalAddress(ecTmp.getAddress()))
+			if (EzimNetwork.isLocalAddress(ecTmp.getAddress()))
 				this.setBackground(clrSelf);
 			else
 				this.setBackground(jlstIn.getBackground());

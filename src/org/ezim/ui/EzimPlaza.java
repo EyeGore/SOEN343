@@ -43,6 +43,7 @@ import org.ezim.core.EzimContact;
 import org.ezim.core.EzimContactList;
 import org.ezim.core.EzimImage;
 import org.ezim.core.EzimLang;
+import org.ezim.core.EzimNetwork;
 import org.ezim.core.EzimPlainDocument;
 import org.ezim.core.EzimThreadPool;
 import org.ezim.ui.EzimMain;
@@ -94,7 +95,7 @@ public class EzimPlaza
 
 		this.etfSpeak = new EzimTextField
 		(
-			new EzimPlainDocument(Ezim.maxAckLength)
+			new EzimPlainDocument(EzimNetwork.maxAckLength)
 			, ""
 			, 0
 		);

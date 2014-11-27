@@ -239,7 +239,7 @@ public class EzimAckSemantics
 			else if
 			(
 				strLine.startsWith(EzimAckSemantics.POLL)
-				&& ! Ezim.localAddress.equals(iaIn)
+				&& ! EzimNetwork.localAddress.equals(iaIn)
 			)
 			{
 				String strPollIp = strLine.substring
@@ -252,7 +252,7 @@ public class EzimAckSemantics
 					if
 					(
 						strPollIp.length() == 0
-						|| Ezim.localAddress.equals
+						|| EzimNetwork.localAddress.equals
 							(
 								InetAddress.getByName(strPollIp)
 							)
@@ -353,7 +353,7 @@ public class EzimAckSemantics
 				etpTmp.execute(easTmp);
 			}
 
-			if (! Ezim.localAddress.equals(iaIn))
+			if (! EzimNetwork.localAddress.equals(iaIn))
 			{
 				blnAllInfo = true;
 			}
@@ -434,8 +434,8 @@ public class EzimAckSemantics
 		(
 			EzimAckSemantics.allInfo
 			(
-				Ezim.localDtxPort
-				, Ezim.localName
+				EzimNetwork.localDtxPort
+				, EzimNetwork.localName
 				, emTmp.localSysState
 				, emTmp.localState
 				, emTmp.localStatus
