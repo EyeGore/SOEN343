@@ -109,7 +109,7 @@ public class EzimMsgSender implements Runnable
 							);
 							sckOut.connect(isaTmp, EzimNetwork.dtxTimeout);
 
-							EzimDtxSemantics.sendMsg(sckOut, sbj, msg);
+							EzimDtxMessageSemantics.sendMsg(sckOut, sbj, msg);
 
 							synchronized(lNg)
 							{

@@ -88,7 +88,7 @@ public class EzimFileConfirmer implements Runnable
 			);
 			sckOut.connect(isaTmp, EzimNetwork.dtxTimeout);
 
-			EzimDtxSemantics.sendFileConfirm
+			EzimDtxFileSemantics.sendFileConfirm
 			(
 				sckOut
 				, this.id

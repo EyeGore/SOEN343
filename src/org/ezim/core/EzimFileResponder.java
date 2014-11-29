@@ -88,7 +88,7 @@ public class EzimFileResponder implements Runnable
 			);
 			sckOut.connect(isaTmp, EzimNetwork.dtxTimeout);
 
-			EzimDtxSemantics.sendFileRes(sckOut, this.id, this.blnRes);
+			EzimDtxFileSemantics.sendFileRes(sckOut, this.id, this.blnRes);
 		}
 		catch(Exception e)
 		{
