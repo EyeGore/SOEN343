@@ -185,174 +185,137 @@ public class EzimNetwork
 	 * set local network interface and address
 	 */
 	private static void setLocalNiAddress()
-	{
-		String strLclNi = EzimConf.NET_LOCALNI;
-		String strLclAdr = EzimConf.NET_LOCALADDRESS;
+    {
+        String strLclNi = EzimConf.NET_LOCALNI;
+        String strLclAdr = EzimConf.NET_LOCALADDRESS;
 
-		if (strLclNi != null && strLclNi.length() > 0)
+        if (strLclNi != null && strLclNi.length() > 0)
+        {
+            applyNiSetting(strLclNi);					// refactored
+        }
+
+        if
+        (
+            strLclAdr != null && strLclAdr.length() > 0
+            && EzimNetwork.localNI != null
+        )
+        {
+            List<InetAddress> lTmp = EzimNetwork.nifs.get(EzimNetwork.localNI);
+
+            applyLocalAddressSetting(strLclAdr, lTmp);	// refactored
+        }
+
+        // confine our selectable network interfaces
+        Collection<List<InetAddress>> cTmp = null;
+
+        cTmp = confineSelectableNi();					// refactored
+
+        if (EzimNetwork.localAddress == null)					// refactored: duplicated loops removed
+        {
+            for(List<InetAddress> lTmp: cTmp)
+            {
+                for(InetAddress iaTmp: lTmp)
+                {
+                    if (iaTmp instanceof Inet6Address && ! iaTmp.isLoopbackAddress() && ! iaTmp.isLinkLocalAddress()) // try to pick an IPv6 non-loopback and non-link-locale address
+                    {
+                    	EzimNetwork.localAddress = iaTmp;
+                        break;
+                    }
+                    
+                    if (! iaTmp.isLoopbackAddress() && ! iaTmp.isLinkLocalAddress()) // try to pick a non-loopback and non-link-locale address
+                    {
+                    	EzimNetwork.localAddress = iaTmp;
+                        break;
+                    }
+                    
+                    if (iaTmp instanceof Inet6Address && ! iaTmp.isLoopbackAddress()) // try to pick an IPv6 non-loopback address
+                    {
+                    	EzimNetwork.localAddress = iaTmp;
+                        break;
+                    }
+                    
+                    if (! iaTmp.isLoopbackAddress())    // try to pick a non-loopback address
+                    {
+                    	EzimNetwork.localAddress = iaTmp;
+                        break;
+                    }
+                    
+                    if (iaTmp instanceof Inet6Address)    // try to pick an IPv6 address
+                    {
+                    	EzimNetwork.localAddress = iaTmp;
+                        break;
+                    }
+                }
+            }
+            
+            
+        // pick the first available address when all failed
+        if (EzimNetwork.localAddress == null)
+        {
+        	EzimNetwork.localAddress = EzimNetwork.nifs.elements().nextElement().get(0);
+        }
+
+        if (null == EzimNetwork.localNI)
+            for(NetworkInterface niTmp: EzimNetwork.nifs.keySet())
+                if (EzimNetwork.nifs.get(niTmp).contains(EzimNetwork.localAddress))
+                	EzimNetwork.localNI = niTmp;
+        }
+
+
+        // save local network interface
+        EzimConf.NET_LOCALNI = EzimNetwork.localNI.getName();
+
+        // save local address
+        EzimConf.NET_LOCALADDRESS = EzimNetwork.localAddress.getHostAddress();
+    }
+
+	private static void applyLocalAddressSetting(String strLclAdr,
+			List<InetAddress> lTmp) {
+		for(InetAddress iaTmp: lTmp)
+		    if (strLclAdr.equals(iaTmp.getHostAddress()))
+		    	EzimNetwork.localAddress = iaTmp;
+
+		if (null == EzimNetwork.localAddress)
 		{
-			for(NetworkInterface niTmp: EzimNetwork.nifs.keySet())
-				if (strLclNi.equals(niTmp.getName()))
-					EzimNetwork.localNI = niTmp;
-
-			if (null == EzimNetwork.localNI)
-			{
-				EzimLogger.getInstance().warning
-				(
-					"Invalid network interface setting \"" + strLclNi
-						+ "\"."
-				);
-			}
+		    EzimLogger.getInstance().warning
+		    (
+		        "Invalid local address setting \"" + strLclAdr
+		            + "\"."
+		    );
 		}
+	}
 
-		if
-		(
-			strLclAdr != null && strLclAdr.length() > 0
-			&& EzimNetwork.localNI != null
-		)
-		{
-			List<InetAddress> lTmp = EzimNetwork.nifs.get(EzimNetwork.localNI);
-
-			for(InetAddress iaTmp: lTmp)
-				if (strLclAdr.equals(iaTmp.getHostAddress()))
-					EzimNetwork.localAddress = iaTmp;
-
-			if (null == EzimNetwork.localAddress)
-			{
-				EzimLogger.getInstance().warning
-				(
-					"Invalid local address setting \"" + strLclAdr
-						+ "\"."
-				);
-			}
-		}
-
-		// confine our selectable network interfaces
-		Collection<List<InetAddress>> cTmp = null;
+	private static void applyNiSetting(String strLclNi) {
+		for(NetworkInterface niTmp: EzimNetwork.nifs.keySet())
+		    if (strLclNi.equals(niTmp.getName()))
+		    	EzimNetwork.localNI = niTmp;
 
 		if (null == EzimNetwork.localNI)
 		{
-			cTmp = EzimNetwork.nifs.values();
+		    EzimLogger.getInstance().warning
+		    (
+		        "Invalid network interface setting \"" + strLclNi
+		            + "\"."
+		    );
 		}
-		else
-		{
-			cTmp = new ArrayList<List<InetAddress>>();
+	}
 
-			((ArrayList<List<InetAddress>>) cTmp).add
-			(
-				EzimNetwork.nifs.get(EzimNetwork.localNI)
-			);
-		}
-
-		if (EzimNetwork.localAddress == null)
-		{
-			// try to pick an IPv6 non-loopback and non-link-locale address
-			for(List<InetAddress> lTmp: cTmp)
-			{
-				for(InetAddress iaTmp: lTmp)
-				{
-					if
-					(
-						iaTmp instanceof Inet6Address
-						&& ! iaTmp.isLoopbackAddress()
-						&& ! iaTmp.isLinkLocalAddress()
-					)
-					{
-						EzimNetwork.localAddress = iaTmp;
-						break;
-					}
-				}
-			}
-		}
-
-		// try to pick a non-loopback and non-link-locale address
-		if (EzimNetwork.localAddress == null)
-		{
-			for(List<InetAddress> lTmp: cTmp)
-			{
-				for(InetAddress iaTmp: lTmp)
-				{
-					if
-					(
-						! iaTmp.isLoopbackAddress()
-						&& ! iaTmp.isLinkLocalAddress()
-					)
-					{
-						EzimNetwork.localAddress = iaTmp;
-						break;
-					}
-				}
-			}
-		}
-
-		// try to pick an IPv6 non-loopback address
-		if (EzimNetwork.localAddress == null)
-		{
-			for(List<InetAddress> lTmp: cTmp)
-			{
-				for(InetAddress iaTmp: lTmp)
-				{
-					if
-					(
-						iaTmp instanceof Inet6Address
-						&& ! iaTmp.isLoopbackAddress()
-					)
-					{
-						EzimNetwork.localAddress = iaTmp;
-						break;
-					}
-				}
-			}
-		}
-
-		// try to pick a non-loopback address
-		if (EzimNetwork.localAddress == null)
-		{
-			for(List<InetAddress> lTmp: cTmp)
-			{
-				for(InetAddress iaTmp: lTmp)
-				{
-					if (! iaTmp.isLoopbackAddress())
-					{
-						EzimNetwork.localAddress = iaTmp;
-						break;
-					}
-				}
-			}
-		}
-
-		// try to pick an IPv6 address
-		if (EzimNetwork.localAddress == null)
-		{
-			for(List<InetAddress> lTmp: cTmp)
-			{
-				for(InetAddress iaTmp: lTmp)
-				{
-					if (iaTmp instanceof Inet6Address)
-					{
-						EzimNetwork.localAddress = iaTmp;
-						break;
-					}
-				}
-			}
-		}
-
-		// pick the first available address when all failed
-		if (EzimNetwork.localAddress == null)
-		{
-			EzimNetwork.localAddress = EzimNetwork.nifs.elements().nextElement().get(0);
-		}
-
+	private static Collection<List<InetAddress>> confineSelectableNi() {
+		Collection<List<InetAddress>> cTmp;
 		if (null == EzimNetwork.localNI)
-			for(NetworkInterface niTmp: EzimNetwork.nifs.keySet())
-				if (EzimNetwork.nifs.get(niTmp).contains(EzimNetwork.localAddress))
-					EzimNetwork.localNI = niTmp;
+        {
+            cTmp = EzimNetwork.nifs.values();
+        }
+        else
+        {
+            cTmp = new ArrayList<List<InetAddress>>();
 
-		// save local network interface
-		EzimConf.NET_LOCALNI = EzimNetwork.localNI.getName();
-
-		// save local address
-		EzimConf.NET_LOCALADDRESS = EzimNetwork.localAddress.getHostAddress();
+            ((ArrayList<List<InetAddress>>) cTmp).add
+            (
+        		EzimNetwork.nifs.get(EzimNetwork.localNI)
+            );
+        }
+		return cTmp;
 	}
 
 	/**
