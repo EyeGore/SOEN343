@@ -1,0 +1,36 @@
+1. God Class Refactoring:
+Refactored Ezim class into 2 classes: Ezim and EzimNetwork. 
+Before the refactoring, Ezim class, which is a driver class, 
+had the logic to manipulate network operations. It reduced cohesion
+and decreased readability and maintainability. After the refactoring, 
+all the network operations are grouped in their own class.
+
+2. Large Class Refactoring:
+Refactored EzimDtxSemantics class into 3 classes: EzimDtxSemantics, 
+EzimDtxFileSemantics and EzimDtxMessageSemantics. Before the refactoring, 
+EzimDtxSemantics was responsible for sending and receiving messages and
+files, making it have two responsibilities. After the refactoring, EzimDtxFileSemantics
+is taking care of individual operations of manipulating, while EzimDtxMessageSemantics 
+contains operations to manipulate messages. EzimDtxSemantics groups the common operations 
+to both specific classes.
+
+3. Duplicated Code Refactoring
+We got rid of nested "if"s and extracted 2 methods out of
+updContactStatus() and updContactState(). We were considering to also
+use the extracted method called updateContent() in updateContactName(),
+but we couldn't do it, due to that ecTmp.setName(strName) would also
+pass a string just as updateContactStatus() does. We also thought about
+to use a strategy pattern to deal the three very similar methods
+(updContactName(). updContactState(). and updContactStatus()), but we
+gave up on the thought as doing this would still leave a lot of
+duplicated code, which doesn't solve our problem here.
+
+4. 	EzimNetwork Refactoring
+1) Extracted 3 methods to make it clear what the code is doing:
+
+applyLocalAddressSetting()
+applyNiSetting()
+confineSelectableNi()
+
+2) Put all "if" statements inside one single loop, instead of executing
+the same loop multiple times only to evaluate different "if" statements.
