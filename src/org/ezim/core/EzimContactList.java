@@ -22,6 +22,7 @@ package org.ezim.core;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -469,49 +470,35 @@ public class EzimContactList implements ListModel
 		InetAddress iaTmp = this.normalizeAddressIfLocal(iaIn);
 		int iIdx = this.idxContact(iaTmp);
 
-		if (iIdx > -1)
-		{
-			EzimContact ecTmp = this.getElementAt(iIdx);
+		if (iIdx <= -1) return;
+		
+		EzimContact ecTmp = this.getElementAt(iIdx);
 
-			if (ecTmp != null && ecTmp.getAddress().equals(iaTmp))
-			{
+		if (ecTmp == null||! ecTmp.getAddress().equals(iaTmp)) return;
+			
 				// post auto narration in the plaza
-				EzimPlaza epTmp = EzimMain.getInstance().epMain;
-				if (epTmp.isVisible())
-				{
-					if
-					(
-						ecTmp.getSysState() != EzimContact.SYSSTATE_PLAZA
-						&& iState == EzimContact.SYSSTATE_PLAZA
-					)
-					{
-						epTmp.addNarration
-						(
-							iaTmp
-							, EzimLang.HasJoinedPlazaOfSpeech
-						);
-					}
-					else if
-					(
-						ecTmp.getSysState() == EzimContact.SYSSTATE_PLAZA
-						&& iState != EzimContact.SYSSTATE_PLAZA
-					)
-					{
-						epTmp.addNarration
-						(
-							iaTmp
-							, EzimLang.HasLeftPlazaOfSpeech
-						);
-					}
-				}
+	    EzimPlaza epTmp = EzimMain.getInstance().epMain;
+	    
+		if (!epTmp.isVisible()) return;
+				
+		if(ecTmp.getSysState() != EzimContact.SYSSTATE_PLAZA&& iState == EzimContact.SYSSTATE_PLAZA)
+					
+		{epTmp.addNarration(iaTmp, EzimLang.HasJoinedPlazaOfSpeech);}
+		else if
+		(ecTmp.getSysState() == EzimContact.SYSSTATE_PLAZA&& iState != EzimContact.SYSSTATE_PLAZA)
+		{epTmp.addNarration(iaTmp, EzimLang.HasLeftPlazaOfSpeech);}
+				
+		ecTmp.setSysState(iState);
+		this.fireContentsChanged(iIdx, iIdx);
 
-				ecTmp.setSysState(iState);
-				this.fireContentsChanged(iIdx, iIdx);
+		soundGetStateChange();
+			
+		
+	}
 
-				if (EzimSound.getInstance() != null)
-					EzimSound.getInstance().playStateChg();
-			}
-		}
+	private void soundGetStateChange() {
+		if (EzimSound.getInstance() == null)return;
+		EzimSound.getInstance().playStateChg();
 	}
 
 	/**
@@ -521,22 +508,9 @@ public class EzimContactList implements ListModel
 	 */
 	public void updContactState(InetAddress iaIn, int iState)
 	{
-		InetAddress iaTmp = this.normalizeAddressIfLocal(iaIn);
-		int iIdx = this.idxContact(iaTmp);
-
-		if (iIdx > -1)
-		{
-			EzimContact ecTmp = this.getElementAt(iIdx);
-
-			if (ecTmp != null && ecTmp.getAddress().equals(iaTmp))
-			{
-				ecTmp.setState(iState);
-				this.fireContentsChanged(iIdx, iIdx);
-
-				if (EzimSound.getInstance() != null)
-					EzimSound.getInstance().playStateChg();
-			}
-		}
+		            String stringState=String.valueOf(iState);
+				    updateContent(iaIn,stringState);			    
+				    soundGetStateChange();	
 	}
 
 	/**
@@ -546,21 +520,29 @@ public class EzimContactList implements ListModel
 	 */
 	public void updContactStatus(InetAddress iaIn, String strStatus)
 	{
+		updateContent(iaIn, strStatus);
+		if (EzimSound.getInstance() == null) return;
+		EzimSound.getInstance().playStatusChg();	
+	}
+
+private void updateContent(InetAddress iaIn, String strStatus) {
+
 		InetAddress iaTmp = this.normalizeAddressIfLocal(iaIn);
 		int iIdx = this.idxContact(iaTmp);
-
-		if (iIdx > -1)
-		{
-			EzimContact ecTmp = this.getElementAt(iIdx);
-
-			if (ecTmp != null && ecTmp.getAddress().equals(iaTmp))
-			{
-				ecTmp.setStatus(strStatus);
-				this.fireContentsChanged(iIdx, iIdx);
-
-				if (EzimSound.getInstance() != null)
-					EzimSound.getInstance().playStatusChg();
-			}
-		}
-	}
+        if(iIdx<=-1) return;  
+		EzimContact ecTmp = this.getElementAt(iIdx);
+        if(ecTmp ==null||!(ecTmp.getAddress().equals(iaTmp))) return;
+        int iState;
+        try{
+        	iState=Integer.parseInt(strStatus);
+        	ecTmp.setState(iState);
+        }
+        catch(Exception e)
+        { String stringStatus=strStatus;
+        ecTmp.setStatus(stringStatus);;	
+        }
+		
+	    this.fireContentsChanged(iIdx, iIdx);
+		
+}
 }
